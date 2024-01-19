@@ -6,6 +6,7 @@ from typing import Union
 import bit
 import random
 import json
+import ngrok
 
 MAX_INT = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364140
 MAX_TRIES = 10000000000000
@@ -43,4 +44,11 @@ async def generate_address(prefix: Prefix):
     )
 
 if __name__ == "__main__":
+    # Defina o seu authtoken do ngrok
+    ngrok.set_auth_token("2bBgZKtmIiH2wuW6uPJWA578Fkk_6feRukpaqWSw7UsEnd8DB")
+
+    # Inicie o ngrok, apontando para a porta 8000
+    ngrok.connect(8000, "http")
+
+    # Execute o seu aplicativo com o uvicorn e o fastapi, na porta 8000
     uvicorn.run(app, host="0.0.0.0", port=8000)  # Usando a variável PORT lida do ambiente
