@@ -7,7 +7,6 @@ WORKDIR /app
 # Copie os arquivos necessários para o aplicativo
 COPY api.py /app/api.py
 COPY requirements.txt /app/requirements.txt
-COPY start.sh /app/start.sh
 
 # Instale as dependências usando o pip
 RUN pip install -r requirements.txt
@@ -25,8 +24,5 @@ ENV PORT=8000
 # Exponha a porta 8000 do aplicativo e a porta 4040 do ngrok
 EXPOSE 8000 4040
 
-# Tornar o script de inicialização executável
-RUN chmod +x /app/start.sh
-
-# Comando para executar o script de inicialização
-CMD ["/app/start.sh"]
+# Comando para executar o aplicativo e o ngrok
+CMD uvicorn api:app --host 0.0.0.0 --port 8000 & ./ngrok http 8000
