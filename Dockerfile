@@ -7,6 +7,7 @@ WORKDIR /app
 # Copie os arquivos necessários para o aplicativo
 COPY api.py /app/api.py
 COPY requirements.txt /app/requirements.txt
+COPY start.sh /app/start.sh
 
 # Instale as dependências usando o pip
 RUN pip install -r requirements.txt
@@ -18,14 +19,14 @@ RUN unzip ngrok-stable-linux-amd64.zip
 # Defina o seu authtoken do ngrok como uma variável de ambiente
 ENV NGROK_AUTHTOKEN=2bBgZKtmIiH2wuW6uPJWA578Fkk_6feRukpaqWSw7UsEnd8DB
 
-# Execute o ngrok em segundo plano, apontando para a porta 8000
-RUN ./ngrok http 8000 &
-
 # Defina a porta a ser usada pelo aplicativo
 ENV PORT=8000
 
 # Exponha a porta 8000 do aplicativo e a porta 4040 do ngrok
 EXPOSE 8000 4040
 
-# Comando para executar o aplicativo
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Tornar o script de inicialização executável
+RUN chmod +x /app/start.sh
+
+# Comando para executar o script de inicialização
+CMD ["/app/start.sh"]
